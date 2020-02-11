@@ -1,23 +1,23 @@
-const mongoose = require('mongoose')
-
-const DocumentSchema = new mongoose.Schema({
+"use strict"
+const mongoose = require("mongoose")
+const User = require("./../../models/Accounts/User")
+    
+const documentSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true
     },
-    description:{
-        type: String
-    },
-    date:{
-        type: Date,
+    type:{
+        type: String,
         required: true
     },
-    catagory:{
-        type: String
+    public: {
+        type: Boolean,
+        default: false
     },
-    pageCount:{
-        type: Number,
-        required: true
+    sharedUsers:{
+        type: Array,
+        required: false
     },
     uploadedDate:{
         type: Date,
@@ -27,9 +27,16 @@ const DocumentSchema = new mongoose.Schema({
     documentCover:{
         type: String
     },
-    author:{
+    file: {
+        type: String
+    },
+    owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true, 
-        ref: 'Author'
+        ref: 'User'
     }
 })
+
+const Document = mongoose.model('Document', documentSchema);
+
+module.exports = Document;

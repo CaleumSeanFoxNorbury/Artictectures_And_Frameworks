@@ -1,27 +1,33 @@
-<h1>Register</h1>
+<html>
+  <head>
+    <h1>Register</h1>    
+  </head>
+  <body>
+    <form action="/user/register" method="POST">
+      <!--form section-->
+    <div>
+      <label for="name">Username</label>
+      <input type="text" name="username" required></input>
+    </div>
+      <!--end form section-->
+      <!--form section-->
+    <div>
+      <label for="email">Email</label>
+      <input type="text" id="email" name="email" required></input>
+    </div>
+      <!--end form section-->
+      <!--form section-->
+    <div>      
+      <label for="password">Password</label>
+      <input type="text" id="password" name="password" required></input>
+    </div>
+      <!--end form section-->
 
-
-<form action="/user/register" method="POST">
-    <!--form section-->
-  <div>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required></input>
-  </div>
-    <!--end form section-->
-    <!--form section-->
-  <div>
-    <label for="name">Email</label>
-    <input type="text" id="email" name="email" required></input>
-  </div>
-    <!--end form section-->
-    <!--form section-->
-  <div>
-    <label for="name">Password</label>
-    <input type="text" id="password" name="password" required></input>
-  </div>
-    <!--end form section-->
-    <button type="submit">Register</button>
-</form>
+      <button type="submit">Register</button>
+    </form>
+  </body>
+</html>
+  
 
   
   

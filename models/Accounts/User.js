@@ -1,8 +1,7 @@
-";use strict";;
-const mongoose = require("mongoose"),
-{ Schema } = mongoose,
-userSchema = new Schema(
-{
+";use strict";
+const mongoose = require("mongoose")
+
+const UserSchema = new mongoose.Schema({
 username: {
 type: String,
 required: true,
@@ -23,10 +22,19 @@ accountType:{
 type: String,
 required: true
 },
+loggedInStatus:{
+    type: Boolean,
+    required: true
+},
+authenticationToken:{
+    type: String,
+    reauired: true
+},
 dateCreated:{
 type: Date,
 required: true,
-default: Date.now }
-} );
+default: Date.now 
+} 
+});
 
-module.exports = mongoose.model('User', userSchema)
+module.exports =  mongoose.model('User', UserSchema)
