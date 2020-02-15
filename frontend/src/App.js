@@ -12,6 +12,8 @@ import Login from "./components/authentication/Login";
 import Logout from "./components/authentication/Logout";
 
 import Documents from "./components/documents/Home";
+import SingleDocument from "./components/documents/Document";
+import OpenDocument from "./components/documents/Open";
 import UploadDocument from "./components/documents/UploadDocument";
 import PublicDocuments from "./components/documents/public/Home";
 
@@ -32,6 +34,8 @@ function App() {
       <Route path="/user/logout" exact component={Logout} />
       <Route path="/user/edit" exact component={EditProfile} />
       <Route path="/documents" exact component={Documents} />
+      <Route path="/documents/single/:title" exact component={SingleDocument} />
+      <Route path="/documents/:title/open" exact component={OpenDocument} />
       <Route path="/documents/upload" exact component={UploadDocument} />
       <Route path="/public/documents" exact component={PublicDocuments} />
       <Route path="/chat/join" exact component={JoinChat} />

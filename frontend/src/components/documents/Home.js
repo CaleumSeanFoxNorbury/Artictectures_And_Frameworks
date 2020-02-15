@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './css/DocumentStyles.css';
 
 const Document = props =>(
     <tr key={props.document._id}>
-        <td>{props.document.title}</td>
+        <a class="props-link" href={"/documents/single/" + props.document.title}><td>{props.document.title}</td></a>
         <td>{props.document.type}</td>
         <td>{props.document.uploadedDate}</td>
     </tr>
@@ -51,7 +52,6 @@ export default class DocumentsHome extends Component{
         });
     }
 
-
     render(){
         var isLoaded = this.state.isLoaded;
         var DocumentsTable = this.documentList();        
@@ -66,14 +66,27 @@ export default class DocumentsHome extends Component{
             return(
                 <div>
                     <h1>Sky Docs</h1>
-                    <table>
+                    <table id="documents">
                         <tr>
                             <th>Title</th>
                             <th>Type</th>
                             <th>Upload Date</th>                
-                        </tr>
+                        </tr>                      
+                            {DocumentsTable}
                     </table>
-                    {DocumentsTable}
+                    
+                    <div id="Sub-Page" class="subpage">
+                        <div class="subpage-content ">
+                            <span class="close">&times;</span>
+                            <h2>Checkout</h2>
+                            <br></br>
+                            <p>Please select a method of payment to proceed with: </p>
+                            <br></br>
+                            <button class="btn-subpage-checkout" onClick="">Card</button>
+                            <button class="btn-subpage-checkout" onClick="">Cash</button>
+                        </div>
+                    </div>
+
                 </div>
             )
         }

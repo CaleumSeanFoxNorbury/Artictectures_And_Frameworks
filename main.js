@@ -4,100 +4,91 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
 
-const express = require('express')
-const app = express()
-const expressLayouts = require('express-ejs-layouts')
-var passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
+//middleware declarations and uses
+const express = require('express');
+const mongoose = require('mongoose');
+const expressLayouts = require('express-ejs-layouts');
+const flash = require('express-flash');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const mongoStore = require('connect-mongo')(session);
+const MongoClient = require("mongodb").MongoClient;
+const cors = require('cors');
+const two_hours = 1000 * 60 * 60 * 2;
+const app = express();
+// app.use((req, res, next) => {
+//   res.set("Access-Control-Allow-Origin", 'http://localhost:3000');
+//   res.set("Access-Control-Allow-Credentials", 'true');
+//   res.set("Access-Control-Allow-Methods", 'GET, POST, OPTIONS');
+//   next();
+// });
+//socket.io
+const http = require('http');
+const socketio = require('socket.io');
+const server = http.createServer(app);
+const io = socketio(server);
+//
+const ChatController = require("./controllers/chat/ChatController");
 
-const port = 3000;
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
-app.set('view engine', 'ejs')
-app.set('views', __dirname + '/views')
-app.set('layout', 'layouts/layout')
-app.use(expressLayouts)
-app.use(express.static('public'))
-
-app.use(express.json()) //Json
-
-const mongoose = require('mongoose')
-mongoose.connect(process.env.dbURL, {
+MongoClient.connect(process.env.dbURL, {
     useUnifiedTopology: true,
-    useNewUrlParser: true //may not need this  
-})
-const db = mongoose.connection
-db.on('error', error => console.error(error))
-db.once('open', () => console.log('Connected to mongoose'))
-
-//--Routes---
-const usersController = require("./controllers/Accounts/UserController")
-
-const indexRouter = require('./routes/index') 
-const profileRouter = require('./routes/profileRoute')
-const documentRouter = require('./routes/documentRoutes')
-const publicDocumentsRoutes = require('./routes/publicDocumentRoutes')
-//-----------
-
-const mongo = require("mongodb").MongoClient,
-dbURL = "mongodb://localhost:27017",
-database = "AssignmentDB";
-
-mongo.connect(dbURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }, (err, client) => {
+    useNewUrlParser: true
+  },(err) => {
   if (err) {
     console.error(err)
-    return
+    throw err;
   }
+  console.log('Database Connection: Connected to MongoDB!');
 })
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+mongoose.connect(process.env.dbURL, {
+  useNewUrlParser: true,
+  useCreateIndex:true,
+  useUnifiedTopology: true
+});
+const db = mongoose.connection
+db.on('error', error => console.error(error))
+db.once('open', () => console.log('Mongoose Connection: Connected To Mongoose!'));
+
+app.use(expressLayouts);
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
+app.use(cookieParser("passcode"));
+app.use(express.json()) 
+app.use(cookieParser('AAF-Secret'));
+app.use(flash());
+app.use(cors());
+app.use(session({
+  secret: 'CalEum',
+  saveUninitialized: true,
+  resave: true,
+  cookie:{
+    secure: false,
+    httpOnly: false
   }
-));
+}));
 
-app.use('/', indexRouter)
-app.use('/user', profileRouter)
-app.use('/skydocs/documents', documentRouter)
-app.use('/skydocs/public/documents', publicDocumentsRoutes)
+const DashboardRoutes = require('./routes/DashboardRoutes') 
+const UserRoutes = require('./routes/UserRoutes')
+const DocumentRoutes = require('./routes/DocumentRoutes')
+const PublicDocumentRoutes = require('./routes/PublicDocumentRoutes')
 
-app.listen(process.env.PORT || 3000)    //another port | hmm?..
+app.use('/', DashboardRoutes);
+app.use('/user', UserRoutes);
+app.use('/documents', DocumentRoutes);
+app.use('/public/documents', PublicDocumentRoutes);
 
-// function DemoApplication(){
-//     SeedDefaultDocuments();
-// }
+//spocket io connection
+io.on('connection', (socket) =>{
+  console.log("Socket.IO Connection:", "Connected To Socket!");
 
-// function SeedDefaultDocuments(){
-//     // db.collection("DefaultSeedingDocuments").insertOne(
-//     //     {
-//     //         Title: "Default Document One",
-//     //         DocumentCode: "4456778",
-//     //         Author: {
-//     //             Name: "Caleum Sean Fox Norbury",
-//     //             email: "blank@blank.com",
-//     //         },
-//     //         DocuemntType: "Seeding document",
-//     //         DocumentDate: "12/12/2019",
-//     //         Catagory: "Depevement Document"
-//     //     }
-//     // );
-// }
+  socket.on('disconnect', () => {
+    console.log("Socket.IO Connection:", "Disconnected from Socket!");
+  })
+});
 
-// function findAllRecordsInCollectionDeaultDocuments(){
-//     // db.collection("DefaultSeedingDocuments")
-//     // .find()
-//     // .toArray((error, data) => {
-//     // if (error) throw error;
-//     // console.log(data);
-//     // });
-// }
+server.listen(3001, () => console.log("Server Connection: Server Is Running!"));

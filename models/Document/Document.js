@@ -30,6 +30,20 @@ const documentSchema = new mongoose.Schema({
     file: {
         type: String
     },
+    isOpen: {
+        type: Boolean,
+        default: false,
+    },
+    openedBy: {
+        type: String,
+        required: false
+    },
+    // HOW THE ATTRIBUTE SETUP SHOULD BE IF SESSIONS WAS ENABLED
+    // openedBy: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: false, 
+    //     ref: 'User'
+    // },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true, 
