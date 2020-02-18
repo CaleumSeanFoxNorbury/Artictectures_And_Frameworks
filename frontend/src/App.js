@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Dashboard from "./components/dashboard/Dashboard";
 
 import Profile from "./components/users/Profile";
+import Single from "./components/users/Single";
 import EditProfile from "./components/users/EditProfile";
 import Register from "./components/authentication/Register";
 import Login from "./components/authentication/Login";
@@ -33,6 +34,7 @@ function App() {
       <Route path="/user/login" exact component={Login} />
       <Route path="/user/logout" exact component={Logout} />
       <Route path="/user/edit" exact component={EditProfile} />
+      <Route path="/user/profile/:username" exact component={Single} />
       <Route path="/documents" exact component={Documents} />
       <Route path="/documents/single/:title" exact component={SingleDocument} />
       <Route path="/documents/:title/open" exact component={OpenDocument} />

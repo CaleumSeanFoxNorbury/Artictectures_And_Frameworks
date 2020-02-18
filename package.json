@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "test": "mocha 'testing/ApplicationUnitTests.js'",
     "start": "nodemon main.js",
     "frontend": "npm start --prefix frontend",
     "dev": "concurrently \"nodemon main.js\" \"npm run frontend\""
@@ -15,6 +16,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.4.1",
+    "chai-http": "^4.3.0",
     "client-sessions": "^0.8.0",
     "concurrently": "^5.1.0",
     "connect-mongo": "^3.2.0",
@@ -51,6 +53,8 @@
     "vue": "^2.6.11"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0"
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^7.0.1"
   }
 }

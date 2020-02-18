@@ -7,9 +7,7 @@ const TokenGenerator = require('uuid-token-generator');
 const tokgen = new TokenGenerator;
 
 router.get('/', function(req, res){
-    res.send({
-        "status": "send"
-    })
+    console.log(req.body);
 })
 
 router.post('/register', (req, res) => {
@@ -17,17 +15,21 @@ router.post('/register', (req, res) => {
     try{
         const hashpassword = hashPasswordWithSalt(req.body.password);
         const authenticationToken = tokgen.generate();
-        var accountType, username;
+        var accountType, username, email;
+
         if(req.body.username == "SecretAdmin" && req.body.email == "PromptAccount" && req.body.password == "p@ssword"){
             accountType = "ADMIN";
             username = "Admin";
             email = "AdminsEmail@Email.com";
         }else{
             username = req.body.username;
+            email = req.body.email;
             accountType = "USER";
         }
-        mongo.connect(url, function(err, db){
+    
+        mongo.connect(process.env.dbURL, function(err, db){
             if (err) throw err;
+            var dbo = db.db("AAFAssignmentdb");
             user = new User({
                 username: username,
                 email: email,
@@ -36,20 +38,14 @@ router.post('/register', (req, res) => {
                 authenticationToken: authenticationToken,  
                 loggedInStatus: false
             });    
-            var dbo = db.db("AAFAssignmentdb");
             dbo.collection("users").insertOne(user, function(err, res) {
                 if (err) throw err;
                 console.log("User created", " at ", date, ".", " Account Name: ", user.username);
             });
-        }); 
-        res.send({
-            "status": "registered"
-        })
+        });
     }catch{
-        //if error send 500 internal server error
-        res.statusCode(500).send({
-            "Error: ": "User failed to be created!"
-        })
+        console.log("Error", "Error status code 500: Internal server error.");
+
     }
 });
 
@@ -74,7 +70,7 @@ router.post('/login', (req, res) => {
                         req.session.cookie.login = true; 
                         req.session.login = true; 
                         console.log("User signed in:", user.username);
-                        console.log(req.session);
+                        console.log("session", req.session); //remove after demo
                         req.session.save();
                         res.send({
                             "session": user
@@ -96,8 +92,21 @@ router.get("/logout", (req, res) => {
     });
 });
 
-router.get('/edit', (req, res) => {
-    console.log("worked");  
+router.post("/profile/:username", (req, res) => {
+    var name = req.body.username.username;
+    try{
+        mongo.connect(process.env.dbURL, { useUnifiedTopology: true }, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("AAFAssignmentdb");
+            dbo.collection("users").findOne({ "username": name })
+            .then(user => {
+                console.log(user);
+                res.send(user);
+            });
+        });
+    }catch{
+        console.log("Error: ", "Failed finding a user!");
+    }
 });
 
 function hashPasswordWithSalt(password){

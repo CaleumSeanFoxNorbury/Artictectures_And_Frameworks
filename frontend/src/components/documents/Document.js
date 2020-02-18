@@ -39,7 +39,7 @@ export default class Document extends Component{
         .catch((error) => {
             console.log(error);
         })
-   }  
+    }  
    
     onChangeTitle(title){
         this.setState({

@@ -5,7 +5,7 @@ const mongo = require("mongodb").MongoClient;
 
 router.get('/', (req, res) =>{ 
     res.json({
-        status: true
+        SessionStatus: true
     })
 
     //code for sessions | if and when fixed issue.

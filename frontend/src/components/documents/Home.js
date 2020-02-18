@@ -36,15 +36,6 @@ export default class DocumentsHome extends Component{
             console.log(error);
         })
     }    
-
-    // deleteDocument(id){
-    //     axios.delete('http://localhost:3000/documents/'+id)
-    //         .then(res => console.log(res.data));
-
-    //     this.setState({,
-    //         documents: this.state.documents.filter(el => el._id !== id)
-    //     })
-    // }
     
     documentList(){
         return this.state.Docs.map(currentDoc => {
@@ -74,18 +65,7 @@ export default class DocumentsHome extends Component{
                         </tr>                      
                             {DocumentsTable}
                     </table>
-                    
-                    <div id="Sub-Page" class="subpage">
-                        <div class="subpage-content ">
-                            <span class="close">&times;</span>
-                            <h2>Checkout</h2>
-                            <br></br>
-                            <p>Please select a method of payment to proceed with: </p>
-                            <br></br>
-                            <button class="btn-subpage-checkout" onClick="">Card</button>
-                            <button class="btn-subpage-checkout" onClick="">Cash</button>
-                        </div>
-                    </div>
+                
 
                 </div>
             )

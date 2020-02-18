@@ -57,7 +57,7 @@ router.post('/upload', (req, res) => {
             var dbo = db.db("AAFAssignmentdb");
             dbo.collection("uploads").insertOne(document, function(err, res) {
                 if (err) throw err;
-                console.log("Document created", " at ", date, ".", " Document name: ", document.title);
+                console.log("Document created", " at ", date, ".", " Document name: ", document.title);                
             });
         }); 
     }catch{

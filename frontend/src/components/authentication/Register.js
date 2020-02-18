@@ -42,7 +42,7 @@ export default class Register extends Component{
         }
 
         try{
-            axios.post('http://localhost:3001/user/register', user)
+            axios.post('http://localhost:3001/user/register', user) 
             .then(res => {
                 console.log("Data: ", res.data)              
             })
